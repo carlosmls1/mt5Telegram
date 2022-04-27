@@ -1,0 +1,32 @@
+            if "TP" in message.text.upper():
+                tp_check = re.findall("TP: ([0-9)]+)", message.text.upper())
+                price = mt5.symbol_info_tick(symbol['symbol']).ask
+                if float(tp_check[0]) < price:
+                    print("Sale order")
+                    OrderType = "sell"
+                    signal_result = open_order(symbol['symbol'], symbol['risk'], mt5.ORDER_TYPE_SELL, tp_check[0])
+                else:
+                    print("Buy order")
+                    OrderType = "buy"
+                    signal_result = open_order(symbol['symbol'], symbol['risk'], mt5.ORDER_TYPE_BUY, tp_check[0])
+            else:
+                if direction.upper() == 'BUY':
+                    OrderType = "buy"
+                    signal_result = open_order(symbol['symbol'], symbol['risk'], mt5.ORDER_TYPE_BUY, False)
+                else:
+                    OrderType = "sell"
+                    signal_result = open_order(symbol['symbol'], symbol['risk'], mt5.ORDER_TYPE_SELL, False)
+            # position_id,type,channel_id,symbol_id
+            if signal_result:
+                signal_data = {
+                    u'symbol': symbol['symbol'],
+                    u'active': True,
+                    u'channel_id': message.chat.id,
+                    u'vol': signal_result.volume,
+                    u'position_id': signal_result.order,
+                    u'magic': signal_result.magic,
+                    u'type': OrderType,
+                    u'profit': 0,
+                    u'create_at': datetime.timestamp(datetime.now())
+                }
+                add_signal(signal_data, signal_result.order)
