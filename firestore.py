@@ -84,7 +84,7 @@ def detect_symbol(text, channel_id):
 
     doc_ref = db.collection(u'channels').document(str(channel_id)).collection(u'symbols')
     docs = doc_ref.stream()
-    text = text.lower().replace("(1s)", "s1").replace("(s1)", "s1")
+    text = text.lower().replace("1s", "s1").replace("(1s)", "s1").replace("(s1)", "s1")
     for doc in docs:
         symbol = doc.id.lower().replace("(1s)", "s1").replace("(s1)", "s1")
         if re.search(""+symbol+"\b", text):
