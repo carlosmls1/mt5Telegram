@@ -10,3 +10,7 @@ with app:
     for dialog in app.get_dialogs():
         print(dialog.chat.title)
         print(dialog.chat.id)
+
+#-1001719528505
+#-1001503458977
+#-1001225381314
